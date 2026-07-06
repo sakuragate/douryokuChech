@@ -1,0 +1,7 @@
+services:
+  - type: web
+    name: douryoku-check
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    autoDeploy: true
