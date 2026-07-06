@@ -137,8 +137,7 @@ if ($result !== null) {
     </style>
 </head>
 <body>
-    <h1>ArithmeticScienceClass テスト</h1>
-    <div class="muted">このページはローカル検証用の簡易UIです（Laravel不要）。</div>
+    <h1>動力チェック用サイト</h1>
 
     <form method="get" action="/" class="card">
         <div class="row">
@@ -179,19 +178,9 @@ if ($result !== null) {
     <?php if ($result !== null): ?>
         <?php
         $step1 = $result['resultData']['douryoku_step1'] ?? [];
-        $step2Count = 0;
-        foreach ($step1 as $row) {
-            if (($row['avg_diff'] ?? 0) > 0) {
-                $step2Count++;
-            }
-        }
         ?>
         <div class="card">
             <div style="font-weight: 700; margin-bottom: 8px;">動力 ①②（20〜70歳 / 平均より高い）</div>
-            <div class="muted" style="margin-bottom: 10px;">
-                ① 1〜19歳・71歳〜を除く → <?= count($step1) ?> 件（年齢 <?= h((string)($step1[0]['age'] ?? '')) ?> 〜 <?= h((string)($step1[count($step1) - 1]['age'] ?? '')) ?> 歳）<br>
-                ② 平均より高い年 → <?= $step2Count ?> 件（「エネルギー上」= 高）
-            </div>
             <?php if ($step1 !== []): ?>
                 <div class="muted" style="margin-bottom: 6px;">表は横にスクロールできます</div>
                 <div class="table-scroll">
