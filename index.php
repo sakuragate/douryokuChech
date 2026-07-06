@@ -80,6 +80,7 @@ foreach (array_keys($default) as $k) {
 }
 
 $hasBirth = ($input['y_inp'] !== '' && $input['m_inp'] !== '' && $input['d_inp'] !== '');
+$debug = isset($src['debug']) && $src['debug'] === '1';
 $result = null;
 $error = null;
 
@@ -139,7 +140,7 @@ if ($result !== null) {
     <h1>ArithmeticScienceClass テスト</h1>
     <div class="muted">このページはローカル検証用の簡易UIです（Laravel不要）。</div>
 
-    <form method="get" class="card">
+    <form method="get" action="/" class="card">
         <div class="row">
             <label>年（西暦）
                 <input type="number" name="y_inp" inputmode="numeric" min="1800" max="2200" value="<?= h($input['y_inp']) ?>">
@@ -264,6 +265,7 @@ if ($result !== null) {
             <?php endif; ?>
         </div>
 
+        <?php if ($debug && $result !== null): ?>
         <div class="card">
             <div style="font-weight: 700; margin-bottom: 8px;">結果（var_dump）</div>
             <pre><?php var_dump($result); ?></pre>
@@ -272,6 +274,7 @@ if ($result !== null) {
             <div style="font-weight: 700; margin-bottom: 8px;">結果（JSON）</div>
             <pre><?= h(json_encode($result, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT) ?: '') ?></pre>
         </div>
+        <?php endif; ?>
     <?php endif; ?>
 </body>
 </html>
