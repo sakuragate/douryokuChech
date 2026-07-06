@@ -80,7 +80,6 @@ foreach (array_keys($default) as $k) {
 }
 
 $hasBirth = ($input['y_inp'] !== '' && $input['m_inp'] !== '' && $input['d_inp'] !== '');
-$debug = isset($src['debug']) && $src['debug'] === '1';
 $result = null;
 $error = null;
 
@@ -112,20 +111,27 @@ if ($result !== null) {
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>ArithmeticScienceClass テスト</title>
+    <title>動力チェック用サイト</title>
     <style>
-        body { font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; line-height: 1.4; margin: 24px; }
-        .row { display: flex; gap: 12px; flex-wrap: wrap; align-items: end; }
-        .row-names { align-items: start; }
-        label { display: grid; gap: 6px; font-size: 14px; }
-        input[type="number"], input[type="text"] { padding: 8px 10px; font-size: 16px; width: 10rem; }
-        .sex { display: flex; gap: 12px; padding: 8px 0; }
-        button { padding: 10px 14px; font-size: 16px; cursor: pointer; }
-        .card { margin-top: 18px; padding: 14px; border: 1px solid #ddd; border-radius: 10px; }
+        * { box-sizing: border-box; }
+        body { font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; line-height: 1.4; margin: 0; background: #f7f7f8; color: #222; }
+        .page { max-width: 1180px; margin: 0 auto; padding: 28px 20px 40px; }
+        h1 { margin: 0 0 18px; font-size: 30px; letter-spacing: .02em; }
+        .row { display: flex; gap: 14px; flex-wrap: wrap; align-items: end; }
+        .row-names { align-items: end; margin-top: 14px; }
+        .actions { display: flex; gap: 10px; align-items: center; }
+        label { display: grid; gap: 6px; font-size: 14px; font-weight: 600; color: #333; }
+        input[type="number"], input[type="text"] { padding: 10px 12px; border: 1px solid #ccc; border-radius: 8px; font-size: 16px; width: 10rem; background: #fff; }
+        .sex { display: flex; gap: 16px; padding: 14px 0 0; }
+        .sex label { display: flex; gap: 6px; align-items: center; font-weight: 500; }
+        button, .button-link { display: inline-flex; align-items: center; justify-content: center; min-height: 42px; padding: 10px 18px; border-radius: 8px; border: 1px solid #b00020; font-size: 16px; font-weight: 700; cursor: pointer; text-decoration: none; }
+        button { background: #b00020; color: #fff; }
+        .button-link { background: #fff; color: #b00020; }
+        .card { margin-top: 18px; padding: 18px; border: 1px solid #e0e0e0; border-radius: 12px; background: #fff; box-shadow: 0 2px 10px rgba(0,0,0,.04); }
         .error { color: #b00020; font-weight: 600; }
-        .douryoku-summary { margin-top: 8px; font-size: 30pt; color: #b00020; font-weight: 600; }
-        pre { white-space: pre-wrap; word-break: break-word; }
+        .douryoku-summary { margin-top: 16px; padding-top: 14px; border-top: 1px solid #eee; font-size: 30pt; color: #b00020; font-weight: 700; line-height: 1.2; }
         .muted { color: #666; font-size: 13px; }
+        .table-title { font-size: 18px; font-weight: 700; margin-bottom: 10px; }
         .table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; max-width: 100%; margin: 0 -4px; padding-bottom: 4px; }
         .douryoku-table { border-collapse: collapse; width: max-content; min-width: 100%; font-size: 14px; }
         .douryoku-table th, .douryoku-table td { border: 1px solid #ddd; padding: 6px 10px; text-align: right; }
@@ -134,9 +140,19 @@ if ($result !== null) {
         .douryoku-table td:first-child, .douryoku-table td:nth-child(2), .douryoku-table td:nth-child(3), .douryoku-table td:nth-child(n+6) { text-align: center; }
         .douryoku-table tr.row-gaitou-e-high td { color: #b00020; }
         .douryoku-table td.sanchu-cell { white-space: nowrap; line-height: 1.35; }
+        @media (max-width: 640px) {
+            .page { padding: 20px 12px 32px; }
+            h1 { font-size: 26px; }
+            input[type="number"], input[type="text"] { width: 100%; }
+            label { flex: 1 1 100%; }
+            .actions { width: 100%; }
+            button, .button-link { flex: 1; }
+            .douryoku-summary { font-size: 26pt; }
+        }
     </style>
 </head>
 <body>
+<main class="page">
     <h1>動力チェック用サイト</h1>
 
     <form method="get" action="/" class="card">
@@ -164,7 +180,10 @@ if ($result !== null) {
             <label>名（任意）
                 <input type="text" name="mei" value="<?= h($input['mei']) ?>">
             </label>
-            <button type="submit">実行</button>
+            <div class="actions">
+                <button type="submit">実行</button>
+                <a class="button-link" href="/">リセット</a>
+            </div>
         </div>
         <?php if ($result !== null): ?>
             <div class="douryoku-summary">動力：<?= h(implode(', ', $douryokuAges)) ?></div>
@@ -180,7 +199,7 @@ if ($result !== null) {
         $step1 = $result['resultData']['douryoku_step1'] ?? [];
         ?>
         <div class="card">
-            <div style="font-weight: 700; margin-bottom: 8px;">動力 ①②（20〜70歳 / 平均より高い）</div>
+            <div class="table-title">判定一覧</div>
             <?php if ($step1 !== []): ?>
                 <div class="muted" style="margin-bottom: 6px;">表は横にスクロールできます</div>
                 <div class="table-scroll">
@@ -253,18 +272,8 @@ if ($result !== null) {
                 <div class="error">該当データがありません。</div>
             <?php endif; ?>
         </div>
-
-        <?php if ($debug && $result !== null): ?>
-        <div class="card">
-            <div style="font-weight: 700; margin-bottom: 8px;">結果（var_dump）</div>
-            <pre><?php var_dump($result); ?></pre>
-        </div>
-        <div class="card">
-            <div style="font-weight: 700; margin-bottom: 8px;">結果（JSON）</div>
-            <pre><?= h(json_encode($result, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT) ?: '') ?></pre>
-        </div>
-        <?php endif; ?>
     <?php endif; ?>
+</main>
 </body>
 </html>
 
